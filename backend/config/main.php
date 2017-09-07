@@ -12,6 +12,11 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [],
+    // 'layout'=>false, //关闭布局模板
+    //  设置中文语言
+    //'language'=>'zh_CN',
+    //  设置默认路由  默认index方法,可以省略
+    'defaultRoute'=>'gii',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',

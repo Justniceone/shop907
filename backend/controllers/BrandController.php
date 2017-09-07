@@ -34,12 +34,16 @@ class BrandController extends \yii\web\Controller
             $model->file=UploadedFile::getInstance($model,'file');
             //验证表单数据
             if($model->validate()){
-                $path='/assets/upload/'.time().'.'.$model->file->getExtension();
-                //保存图片
-                $model->file->saveAs(\Yii::getAlias('@webroot').$path,false);
-                //保存logo字段
-                $model->logo=$path;
-                $model->save();
+                if($model->file){
+
+                    $path='/assets/upload/'.time().'.'.$model->file->getExtension();
+                    //保存图片
+                    $model->file->saveAs(\Yii::getAlias('@webroot').$path,false);
+                    //保存logo字段
+                    $model->logo=$path;
+                }
+
+                $model->save(false);
                 \Yii::$app->session->setFlash('success','操作成功');
                 return $this->redirect(['brand/index']);
             }
@@ -60,12 +64,16 @@ class BrandController extends \yii\web\Controller
             $model->file=UploadedFile::getInstance($model,'file');
             //验证表单数据
             if($model->validate()){
-                $path='/assets/upload/'.time().'.'.$model->file->getExtension();
-                //保存图片
-                $model->file->saveAs(\Yii::getAlias('@webroot').$path,false);
-                //保存logo字段
-                $model->logo=$path;
-                $model->save();
+
+                if($model->file){
+                    $path='/assets/upload/'.time().'.'.$model->file->getExtension();
+                    //保存图片
+                    $model->file->saveAs(\Yii::getAlias('@webroot').$path,false);
+                    //保存logo字段
+                    $model->logo=$path;
+                }
+
+                $model->save(false);
                 \Yii::$app->session->setFlash('success','操作成功');
                 return $this->redirect(['brand/index']);
             }
@@ -83,5 +91,10 @@ class BrandController extends \yii\web\Controller
             \Yii::$app->session->setFlash('success','删除成功');
             return $this->redirect(['brand/index']);
         }
+    }
+
+    //Ajax不刷新删除
+    public function actionAjax(){
+
     }
 }

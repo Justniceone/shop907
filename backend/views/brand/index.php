@@ -1,4 +1,5 @@
 <a href="<?=\yii\helpers\Url::to(['brand/add'],['class'=>'btn btn-success'])?>" class="btn btn-info" >添加</a>
+
 <table class="table table-bordered">
     <tr>
         <th>id</th>
@@ -20,6 +21,7 @@
             <td>
                 <?=\yii\bootstrap\Html::a('删除',['brand/delete','id'=>$model->id])?>&emsp;
                 <?=\yii\bootstrap\Html::a('修改',['brand/edit','id'=>$model->id])?>
+                <?=\yii\bootstrap\Html::button('ajax删除',['class'=>'btn btn-danger btn-sm'])?>
             </td>
         </tr>
     <?php endforeach;?>
@@ -29,3 +31,5 @@ echo \yii\widgets\LinkPager::widget([
         'pagination'=>$pager,
         'options'=>['class'=>'pagination-lg pagination'],
 ]);
+
+?>
