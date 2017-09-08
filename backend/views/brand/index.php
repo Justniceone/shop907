@@ -27,9 +27,33 @@
     <?php endforeach;?>
 </table>
 <?php
+/**
+ * @var $this \yii\web\View
+ */
 echo \yii\widgets\LinkPager::widget([
         'pagination'=>$pager,
         'options'=>['class'=>'pagination-lg pagination'],
 ]);
+$url=\yii\helpers\Url::to(['brand/ajaxdel']);
+$this->registerJs(new \yii\web\JsExpression(
+        <<<JS
+       $('.btn-sm').click(function() {
+         //点击之后发送ajax请求
+         var tr=$(this).closest('tr');
+         var id=tr.find('td:first').text();
+         if(confirm('确定删除?')){
+         $.getJSON("$url",{'id':id},function(data) {
+            alert(data.msg);
+            if(data.msg){
+             //删除tr
+             console.log(tr);
+             tr.hide('slow');
+            }
+         })
+         }
 
+       }) 
+JS
+));
 ?>
+

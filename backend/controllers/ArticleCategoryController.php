@@ -13,7 +13,7 @@ class ArticleCategoryController extends \yii\web\Controller
         //列表功能
         $pager=new Pagination([
             'totalCount'=>ArticleCategory::find()->count(),
-            'pageSize'=>3
+            'pageSize'=>3,
         ]);
         $models=ArticleCategory::find()->where(['>','status',-1])->orderBy('sort desc')->offset($pager->offset)->limit($pager->limit)->all();
         return $this->render('index',['models'=>$models,'pager'=>$pager]);
