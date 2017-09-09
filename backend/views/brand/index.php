@@ -1,3 +1,4 @@
+<h2 style="color: cyan"></h2>
 <a href="<?=\yii\helpers\Url::to(['brand/add'],['class'=>'btn btn-success'])?>" class="btn btn-info" >添加</a>
 
 <table class="table table-bordered">
@@ -43,11 +44,13 @@ $this->registerJs(new \yii\web\JsExpression(
          var id=tr.find('td:first').text();
          if(confirm('确定删除?')){
          $.getJSON("$url",{'id':id},function(data) {
-            alert(data.msg);
+            
             if(data.msg){
+                //提示信息
+                $('h2').text(data.msg);
+                $('h2').fadeOut(3000);
              //删除tr
-             console.log(tr);
-             tr.hide('slow');
+             tr.fadeOut('slow');
             }
          })
          }

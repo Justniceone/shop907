@@ -7,6 +7,7 @@ use yii\data\Pagination;
 use yii\web\Request;
 use yii\web\UploadedFile;
 use flyok666\uploadifive\UploadAction;
+use flyok666\qiniu\Qiniu;
 class BrandController extends \yii\web\Controller
 {
     public $enableCsrfValidation=false;
@@ -154,13 +155,50 @@ class BrandController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-                    $action->output['fileUrl'] = $action->getWebUrl();
+                 //   $action->output['fileUrl'] = $action->getWebUrl();
                     $action->getFilename(); // "image/yyyymmddtimerand.jpg"
                     $action->getWebUrl(); //  "baseUrl + filename, /upload/image/yyyymmddtimerand.jpg"
                     $action->getSavePath(); // "/var/www/htdocs/upload/image/yyyymmddtimerand.jpg"
+                    //将图片保存到七牛云
+/*                    $config = [
+                        'accessKey'=>'gEaQS_5EWRYAAuz7nZc9plt40jRRb6HU7MI0aXwh',
+                        'secretKey'=>'ABWGH-ma6kW55zcfwgzPxQJ9KUe_PQDXBn3ImW6q',
+                        'domain'=>'http://ovy9vleun.bkt.clouddn.com',
+                        'bucket'=>'bopang',
+                        'area'=>Qiniu::AREA_HUADONG,
+                    ];*/
+
+                    $qiniu = new Qiniu(\Yii::$app->params['qiniuyun']);
+                    $key = $action->getWebUrl();
+                    //$file=\Yii::getAlias('@webroot/assets/upload/1.jpg');
+                    $file=$action->getSavePath();
+                    $qiniu->uploadFile($file,$key);
+                    $url = $qiniu->getLink($key);
+                    $action->output['fileUrl']=$url;//输出图片的路径
 
                 },
             ],
         ];
+    }
+
+
+    //测试七牛云存储
+    public function actionQiniu(){
+    //use flyok666\qiniu\Qiniu;
+        $config = [
+            'accessKey'=>'gEaQS_5EWRYAAuz7nZc9plt40jRRb6HU7MI0aXwh',
+            'secretKey'=>'ABWGH-ma6kW55zcfwgzPxQJ9KUe_PQDXBn3ImW6q',
+            'domain'=>'http://ovy9vleun.bkt.clouddn.com',
+            'bucket'=>'bopang520',
+            'area'=>Qiniu::AREA_HUADONG
+        ];
+
+        $qiniu = new Qiniu($config);
+        $key = time();
+        //key通常使用文件名,通过key得到图片
+        //$_FILES['tmp_name']表示要上传到七牛云的本地图片路径
+        $qiniu->uploadFile($_FILES['tmp_name'],$key);
+        $url = $qiniu->getLink($key);
+
     }
 }
