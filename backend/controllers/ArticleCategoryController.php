@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
 use yii\web\Request;
 
 class ArticleCategoryController extends \yii\web\Controller
@@ -66,5 +67,47 @@ class ArticleCategoryController extends \yii\web\Controller
         }else{
             var_dump($model->getErrors());
         }
+    }
+
+/*    public function behaviors()
+    {
+        return [
+            'access'=>[
+                'class'=>AccessControl::className(),
+                'rules'=>[
+                    'allow'=>true,
+                    'actions'=>['add'],
+                    'roles'=>['@'],
+                ],
+
+                    [
+                        'allow' => true,
+                        'actions' => ['delete'],
+                        'roles' => ['@'],
+                    ],
+
+            ],
+        ];
+    }*/
+
+    public function behaviors()
+    {
+        return [
+            'access'=>[
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index','edit'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['update','delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ]
+                ],
+            ],
+        ];
     }
 }

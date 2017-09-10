@@ -22,8 +22,8 @@
             <td><?=date('Y/m/d',$model->create_time)?></td>
             <td>
                 <?=\yii\bootstrap\Html::a('删除',['article/delete','id'=>$model->id])?>&emsp;
-                <?=\yii\bootstrap\Html::a('修改',['article/edit','id'=>$model->id])?>
-                <?=\yii\bootstrap\Html::button('ajax删除',['class'=>'btn btn-danger btn-sm'])?>
+                <?=\yii\bootstrap\Html::a('修改',['article/edit','id'=>$model->id])?>&emsp;
+                <?=\yii\bootstrap\Html::a('详情',['article-detail/index','id'=>$model->id])?>
             </td>
         </tr>
     <?php endforeach;?>
