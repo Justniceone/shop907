@@ -21,7 +21,7 @@
             <td><?=$model->rgt?></td>
             <td><?=$model->depth?></td>
             <td><?=$model->parent_id?></td>
-            <td><?=$model->intro?></td>
+            <td><?=str_repeat('--',3*($model->depth)).$model->intro?></td>
             <td>
                 <?=\yii\bootstrap\Html::a('删除',['goods-category/delete','id'=>$model->id])?>&emsp;
                 <?=\yii\bootstrap\Html::a('修改',['goods-category/edit','id'=>$model->id])?>&emsp;

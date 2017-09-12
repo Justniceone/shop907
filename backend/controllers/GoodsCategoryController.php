@@ -12,7 +12,7 @@ class GoodsCategoryController extends \yii\web\Controller
     public function actionIndex()
     {
         $pager=new Pagination([
-            'pageSize'=>10,
+            'pageSize'=>12,
             'totalCount'=>GoodsCategory::find()->count(),
         ]);
         $models=GoodsCategory::find()->offset($pager->offset)->limit($pager->limit)->all();
@@ -62,8 +62,12 @@ class GoodsCategoryController extends \yii\web\Controller
                     $one=GoodsCategory::findOne(['id'=>$model->parent_id]);
                     $model->prependTo($one);
                 }else{
-                    //$model->parent_id=0;
-                    $model->makeRoot();
+                    //判断是否是顶级节点,是就保存,不添加
+                    if($model->getOldAttribute('parent_id') == 0){
+                        $model->save();
+                    }else{
+                        $model->makeRoot();
+                    }
                 }
                 return $this->redirect(['index']);
             }
@@ -77,14 +81,22 @@ class GoodsCategoryController extends \yii\web\Controller
         $request=\Yii::$app->request;
         $id=$request->get('id');
         $model=GoodsCategory::findOne(['id'=>$id]);
-        $sons=GoodsCategory::find()->where(['parent_id'=>$id])->asArray()->all();
-        //var_dump($sons);die;
-        if($sons){
+        //$sons=GoodsCategory::find()->where(['parent_id'=>$id])->asArray()->all();
+
+/*        if($sons){
             \Yii::$app->session->setFlash('danger','有子分类不能删除');
         }else{
+            \Yii::$app->session->setFlash('success','删除成功');
             //删除
             $model->delete();
+        }*/
+        //判断是否是叶子节点
+        if($model->isLeaf()){
+            $model->deleteWithChildren();//删除当前节点及子节点
+        }else{
+            \Yii::$app->session->setFlash('danger','有子分类不能删除');
         }
+
         return $this->redirect('index');
     }
 
