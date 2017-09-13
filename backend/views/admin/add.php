@@ -24,15 +24,11 @@
             <td><?=$model->status?></td>
             <td><?=$model->create_at?></td>
             <td><?=$model->update_at?></td>
-            <td><?=$model->is_on_sale?'在售':'下架'?></td>
-            <td><?=$model->status?'正常':'回收站'?></td>
-            <td><?=$model->sort?></td>
-            <td><?=date('Y/m/d H:i:s',$model->create_time)?></td>
-            <td><?=$model->view_times?></td>
+            <td><?=date('Y/m/d H:i:s',$model->last_login_time)?></td>
+            <td><?=$model->last_login_ip?></td>
             <td>
                 <a href="<?=\yii\helpers\Url::to(['goods/del','id'=>$model->id])?>"><span class="glyphicon glyphicon-trash"></span></a>
                 <a href="<?=\yii\helpers\Url::to(['goods/edit','id'=>$model->id])?>"<span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
-                <a href="<?=\yii\helpers\Url::to(['goods/check','id'=>$model->id])?>"><span class="glyphicon glyphicon-film"></span></a>
             </td>
         </tr>
     <?php endforeach;?>
