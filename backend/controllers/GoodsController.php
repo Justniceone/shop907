@@ -178,10 +178,8 @@ class GoodsController extends \yii\web\Controller
     public function actionAjax(){
         //接收数据,删除图片
         $request=\Yii::$app->request;
-        //$goods_id=$request->get('goods_id');
         $path=$request->get('fileUrl');
         $result=GoodsGallery::findOne(['path'=>$path])->delete();
-        var_dump($result);
         if($result){
             echo "{'success':true,'msg':'删除成功'}";
         }
