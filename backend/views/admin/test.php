@@ -1,11 +1,8 @@
 <?php
-$form = \yii\bootstrap\ActiveForm::begin();
-echo $form->field($model,'name')->textInput();
-echo $form->field($model,'intro')->textarea();
-echo $form->field($model,'logo')->hiddenInput();
 
-//--------uploadfive------------------
+$form=\yii\bootstrap\ActiveForm::begin();
 
+//-------------------------上传插件-------------------
 use yii\web\JsExpression;
 
 //外部TAG
@@ -32,9 +29,6 @@ function(file, data, response) {
         console.log(data.msg);
     } else {
         console.log(data.fileUrl);
-        $('input[type=hidden]').val(data.fileUrl);
-        
-        $('.image').attr('src',data.fileUrl);
     }
 }
 EOF
@@ -42,11 +36,7 @@ EOF
     ]
 ]);
 
-//------------end------------------------
+//-------------------end---------------------------------
 
-echo \yii\bootstrap\Html::img($model->logo,['class'=>'image']);
-//echo $form->field($model,'file')->fileInput();
-echo $form->field($model,'sort')->textInput();
-echo $form->field($model,'status')->checkbox();
-echo \yii\bootstrap\Html::submitButton('提交',['class'=>'btn btn-info']);
+
 \yii\bootstrap\ActiveForm::end();

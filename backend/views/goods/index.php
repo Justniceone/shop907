@@ -1,8 +1,10 @@
 <a href="<?=\yii\helpers\Url::to(['goods/add'])?>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 <form action="<?=\yii\helpers\Url::to(['goods/index'])?>" method="get">
-    <input type="text" name="name" placeholder="商品名称">&emsp; <input type="text" name="sn" placeholder="货号sn">&emsp;
-    <input type="text" name="sprice" placeholder="价格从">&emsp;<input type="text" name="tprice" placeholder="到">
-    <input type="submit" value="搜索" class="btn btn-success">
+    <input type="text" name="name" placeholder="商品名称" class="form-inline">&emsp;
+    <input type="text" name="sn" placeholder="货号sn"  class="form-inline">&emsp;
+    <input type="text" name="sn" placeholder="$"  class="form-inline">&emsp;
+    <input type="text" name="tprice" placeholder="到"  class="form-inline">
+    <input type="submit" value="搜索" class="btn btn-success ">
 </form>
 <table class="table table-bordered table-hover">
     <tr class="info">

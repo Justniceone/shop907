@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\Admin;
 use backend\models\AdminForm;
+use backend\models\RolesForm;
 use yii\captcha\Captcha;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -57,7 +58,14 @@ class AdminController extends \yii\web\Controller
             $model->save(false);
             return $this->redirect('index');
         }
-        return $this->render('add',['model'=>$model]);
+
+        //创建角色
+        $roles_form=new RolesForm();
+        $roles=[];
+        foreach (RolesForm::roles() as $role){
+            $roles[$role['name']]=$role['description'];
+        }
+        return $this->render('add',['model'=>$model,'roles_form'=>$roles_form,'roles'=>$roles]);
     }
 
     public function actionDelete(){
@@ -115,11 +123,48 @@ class AdminController extends \yii\web\Controller
 
     public function actionChange(){
         //修改自己密码
+        $FormModel=new AdminForm();
+        $indentity=\Yii::$app->user->identity;
+        //没有登录为NULL
+        if(!$indentity){
+            throw new NotFoundHttpException('请先登录');
+        }
+        $id=$indentity->id;
+        $request=\Yii::$app->request;
+        //提交表单修改
+        if($request->isPost){
+            $FormModel->load($request->post());
+            //判断旧密码是否正确
 
-        return $this->render('change');
+            $result=\Yii::$app->security->validatePassword($FormModel->password_hash,$indentity->password_hash);
+            if($result){
+                //判断两次输入密码是否一致
+                if($FormModel->new_password != $FormModel->re_password){
+                    $FormModel->addError('re_password','两次输入不一致');
+                }else{
+                    //查询出一条记录,并更新密码
+                    //$model=Admin::findOne(['id'=>$id]);
+                    $model=\Yii::$app->user->identity;
+                    $model->password_hash=\Yii::$app->security->generatePasswordHash($FormModel->re_password);
+                    //保存
+                    $model->save(false);
+                    \Yii::$app->user->logout();
+                    \Yii::$app->session->setFlash('success','密码修改成功');
+                    //注销登录
+                    return $this->redirect('login');
+                }
+
+            }else{
+                $FormModel->addError('password_hash','密码不正确');
+            }
+
+        }
+        return $this->render('change',['FormModel'=>$FormModel,'id'=>$indentity]);
     }
 
-    public function behaviors()
+
+
+/*    public function behaviors()
     {
         return [
             'access'=>[
@@ -128,16 +173,17 @@ class AdminController extends \yii\web\Controller
                 'rules'=>[
                     [
                         'allow'=>true,
-                        'actions'=>['login','index'],
+                        'actions'=>['login','index','change'],
                         'roles'=>['?'],
                     ],
                     [
                         'allow'=>true,
-                        'actions'=>['logout','add','edit','delete','index'],
+                        'actions'=>['logout','add','edit','delete','index',],
                         'roles'=>['@'],
                     ],
                 ],
             ]
         ];
-    }
+    }*/
+
 }

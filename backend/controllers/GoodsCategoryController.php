@@ -12,7 +12,7 @@ class GoodsCategoryController extends \yii\web\Controller
     public function actionIndex()
     {
         $pager=new Pagination([
-            'pageSize'=>12,
+            'pageSize'=>15,
             'totalCount'=>GoodsCategory::find()->count(),
         ]);
         $models=GoodsCategory::find()->offset($pager->offset)->limit($pager->limit)->all();

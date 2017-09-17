@@ -70,7 +70,7 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
             [['status'], 'string'],
             [['username'], 'unique'],
             [['email'], 'email',],
-
+            [['password_hash',],'string'],
         ];
     }
 

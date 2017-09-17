@@ -20,8 +20,8 @@
             <td><?=$model->sort?></td>
             <td><?=$model->status?'上架':'下架'?></td>
             <td>
-                <?=\yii\bootstrap\Html::a('删除',['brand/delete','id'=>$model->id])?>&emsp;
-                <?=\yii\bootstrap\Html::a('修改',['brand/edit','id'=>$model->id])?>
+                <?=\yii\bootstrap\Html::a('删除',['brand/delete','id'=>$model->id],['class'=>'btn btn-success btn-sm'])?>&emsp;
+                <?=\yii\bootstrap\Html::a('修改',['brand/edit','id'=>$model->id],['class'=>'btn btn-primary btn-sm'])?>&emsp;
                 <?=\yii\bootstrap\Html::button('ajax删除',['class'=>'btn btn-danger btn-sm'])?>
             </td>
         </tr>

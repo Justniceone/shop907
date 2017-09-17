@@ -15,7 +15,7 @@
     <?php foreach ($models as $model):?>
         <tr>
             <td><?=$model->id?></td>
-            <td><?=$model->name?></td>
+            <td><?=str_repeat('--',3*($model->depth)).$model->name?></td>
             <td><?=$model->tree?></td>
             <td><?=$model->lft?></td>
             <td><?=$model->rgt?></td>

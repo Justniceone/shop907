@@ -102,7 +102,7 @@ class ArticleCategoryController extends \yii\web\Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['update','delete'],
+                        'actions' => ['update','delete','index','edit'],
                         'allow' => true,
                         'roles' => ['@'],
                     ]

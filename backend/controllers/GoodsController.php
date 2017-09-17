@@ -39,7 +39,7 @@ class GoodsController extends \yii\web\Controller
     public function actionAdd(){
         $gts=GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
         //获取所有品牌
-        $all=Brand::find()->asArray()->all();
+        $all=Brand::find()->where(['>','status',-1])->asArray()->all();
         $brands=[];
         foreach ($all as $v){
             $brands[$v['id']]=$v['name'];
