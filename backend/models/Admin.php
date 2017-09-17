@@ -162,4 +162,14 @@ class Admin extends \yii\db\ActiveRecord implements IdentityInterface
         // TODO: Implement validateAuthKey() method.
         return $this->auth_key==$authKey;
     }
+
+    public static function Menus(){
+        return  [
+
+            ['label' => '管理','items'=>[
+                ['label' => '主页','url'=>'site/index'],
+                ['label' => '主页','url'=>'site/index'],
+            ]],
+        ];
+    }
 }

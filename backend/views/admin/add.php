@@ -1,7 +1,7 @@
 <?php
 $form = \yii\bootstrap\ActiveForm::begin();
-print_r($roles);die;
-echo $form->field($roles_form,'name')->dropDownList(\backend\models\RolesForm::roles());
+//var_dump(\backend\models\RolesForm::GetRoles());
+echo $form->field($roles_form,'name')->checkboxList(\backend\models\RolesForm::GetRoles());
 echo $form->field($model,'username')->textInput();
 echo $form->field($model,'password')->passwordInput();
 echo $form->field($model,'email')->textInput();

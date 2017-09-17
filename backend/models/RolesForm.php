@@ -46,4 +46,14 @@ class RolesForm extends Model{
         }
     }
 
+    public static function GetRoles(){
+        //获取所有角色
+        $auth = \Yii::$app->authManager;
+        $roles=$auth->getRoles();
+        $allrole=[];
+        foreach ($roles as $role){
+            $allrole[$role->name]=$role->description;
+        }
+        return $allrole;
+    }
 }
