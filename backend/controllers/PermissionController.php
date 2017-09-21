@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\PermissionForm;
 use backend\models\RolesForm;
 
@@ -193,5 +194,17 @@ class PermissionController extends \yii\web\Controller
             }
 
         return $this->render('add-roles',['roles_form'=>$roles_form]);
+    }
+
+    //配置rbac权限
+    public function behaviors()
+    {
+
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login','logout','captcha','error','change','s-upload'],
+            ]
+        ];
     }
 }

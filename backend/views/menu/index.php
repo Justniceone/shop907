@@ -14,7 +14,7 @@ echo \yii\bootstrap\Html::a('添加',['menu/add'],['class'=>'btn btn-default']);
     <?php foreach ($menus as $menu):?>
         <tr>
             <td>
-                <?=str_repeat('&emsp;&emsp;&emsp;',($menu->parent_id?1:0)).$menu->name?>
+                <?=str_repeat('---------',($menu->parent_id?1:0)).$menu->name?>
             </td>
             <td>
                 <?=$menu->url?>
@@ -26,6 +26,7 @@ echo \yii\bootstrap\Html::a('添加',['menu/add'],['class'=>'btn btn-default']);
         </tr>
     <?php endforeach;?>
 </table>
+
 
 <?php
 /**
@@ -43,6 +44,7 @@ $this->registerJs(new \yii\web\JsExpression(
               console.log(data);
               if(data.success){
                   //移除tr
+                  alert('删除成功');
                   tr.fadeOut('slow');
               }
             })

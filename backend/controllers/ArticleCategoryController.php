@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -69,45 +70,15 @@ class ArticleCategoryController extends \yii\web\Controller
         }
     }
 
-/*    public function behaviors()
-    {
-        return [
-            'access'=>[
-                'class'=>AccessControl::className(),
-                'rules'=>[
-                    'allow'=>true,
-                    'actions'=>['add'],
-                    'roles'=>['@'],
-                ],
-
-                    [
-                        'allow' => true,
-                        'actions' => ['delete'],
-                        'roles' => ['@'],
-                    ],
-
-            ],
-        ];
-    }*/
-
+    //配置rbac权限
     public function behaviors()
     {
+
         return [
-            'access'=>[
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['index','edit'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['update','delete','index','edit'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ]
-                ],
-            ],
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login','logout','captcha','error','change','s-upload'],
+            ]
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Brand;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
@@ -258,13 +259,16 @@ class GoodsController extends \yii\web\Controller
         ];
     }
 
-/*    public function actions()
+    //配置rbac权限
+    public function behaviors()
     {
+
         return [
-            'upload' => [
-                'class' => 'kucha\ueditor\UEditorAction',
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login','logout','captcha','error','change','s-upload','check'],
             ]
         ];
-    }*/
+    }
 
 }

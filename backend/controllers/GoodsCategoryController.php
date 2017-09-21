@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Category;
 use backend\models\GoodsCategory;
 use yii\data\Pagination;
@@ -105,5 +106,17 @@ class GoodsCategoryController extends \yii\web\Controller
         $gts=GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
 
         return $this->renderPartial('test',['gts'=>$gts]);
+    }
+
+    //配置rbac权限
+    public function behaviors()
+    {
+
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login','logout','captcha','error','change','s-upload'],
+            ]
+        ];
     }
 }

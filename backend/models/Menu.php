@@ -78,6 +78,7 @@ class Menu extends \yii\db\ActiveRecord
                 ['label' => '主页','url'=>'site/index'],
                 ['label' => '主页','url'=>'site/index'],
             ];*/
+
             $menuItems[]=['label' => $menu->name,'items'=>$items];
         }
         return $menuItems;

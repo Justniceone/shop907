@@ -2,15 +2,18 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Menu;
 use backend\models\RolesForm;
+use yii\data\Pagination;
 
 class MenuController extends \yii\web\Controller
 {
     public function actionIndex()
     {
         //获取menu所有数据
-       $menus=Menu::find()->all();
+
+       $menus=Menu::find()->orderBy('id asc')->all();
 
         return $this->render('index',['menus'=>$menus]);
     }
@@ -50,6 +53,22 @@ class MenuController extends \yii\web\Controller
         $id=\Yii::$app->request->get('id');
         //根据id删除数据
         Menu::findOne(['id'=>$id])->delete();
-        return "{'success':true,'msg':'删除成功'}";
+        return json_encode([
+            'success'=>true,
+            'msg'=>'删除成功',
+        ]);
+
+    }
+
+    //配置rbac权限
+    public function behaviors()
+    {
+
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login','logout','captcha','error','change','s-upload'],
+            ]
+        ];
     }
 }

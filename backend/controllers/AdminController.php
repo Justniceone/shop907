@@ -205,9 +205,8 @@ class AdminController extends \yii\web\Controller
         return [
             'rbac'=>[
               'class'=>RbacFilter::className(),
-              'except'=>['login','logout','captcha','error'],
+              'except'=>['login','logout','captcha','error','change','s-upload'],
             ]
         ];
     }
-
 }

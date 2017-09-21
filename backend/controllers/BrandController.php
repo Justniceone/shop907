@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\filters\RbacFilter;
 use backend\models\Brand;
 use yii\data\Pagination;
 use yii\web\Request;
@@ -200,5 +201,17 @@ class BrandController extends \yii\web\Controller
         $qiniu->uploadFile($_FILES['tmp_name'],$key);
         $url = $qiniu->getLink($key);
 
+    }
+
+    //配置rbac权限
+    public function behaviors()
+    {
+
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'except'=>['login','logout','captcha','error','change','s-upload'],
+            ]
+        ];
     }
 }

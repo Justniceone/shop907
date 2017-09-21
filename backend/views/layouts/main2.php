@@ -32,7 +32,7 @@ AppAsset::register($this);
         'brandLabel' => 'My Company',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar-brand breadcrumb  navbar-inverse navbar-fixed-top',
         ],
     ]);
 
@@ -51,7 +51,7 @@ AppAsset::register($this);
         ];*/
         $menuItems=\backend\models\Menu::Menus();
         $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
+            . Html::beginForm(['/admin/logout'], 'post')
             . Html::submitButton(
                 '注销 (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']

@@ -31,7 +31,7 @@ class RolesForm extends Model{
         $permissions=$auth->getPermissions();
         $roles=[];
         foreach ($permissions as $permission){
-            $roles[$permission->name]=$permission->description;
+            $roles[$permission->name]=$permission->name;
         }
         return $roles;
     }
