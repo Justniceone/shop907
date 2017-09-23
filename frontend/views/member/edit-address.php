@@ -479,13 +479,13 @@
                     <select id="cmbArea" name="cmbArea"></select>
 
                     <script type="text/javascript">
-                        addressInit('cmbProvince', 'cmbCity', 'cmbArea',"四川",'成都','剑阁');
+                        addressInit('cmbProvince', 'cmbCity', 'cmbArea',"<?=$model->province?>","<?=$model->city?>","<?=$model->area?>");
                     </script>
 
                     <!--------------- -----------------------------------------------end-->
                     <li>
                         <label for="address"><span>*</span>详细地址：</label>
-                        <input type="text" name="address" class="txt address"  />
+                        <input type="text" name="address" class="txt address" value="<?=$model->address?>" />
                     </li>
                     <li>
                         <label for=""><span>*</span>手机号码：</label>

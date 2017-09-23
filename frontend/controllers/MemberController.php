@@ -63,6 +63,9 @@ class MemberController extends \yii\web\Controller
 
                         \Yii::$app->user->login($name,$duration);
                         \Yii::$app->session->setFlash('success','登录成功');
+                        //同步cookie中的商品信息
+                        GoodsController::actionSys();
+
                         return $this->redirect(['goods/index']);
                     }else{
                         $name->addError('password','密码错误');
@@ -97,7 +100,7 @@ class MemberController extends \yii\web\Controller
         //用户注销
         \Yii::$app->user->logout();
         \Yii::$app->session->setFlash('success','注销成功');
-        return $this->redirect(['index']);
+        return $this->redirect(['goods/index']);
     }
 
     public function actionAddress(){
@@ -106,10 +109,13 @@ class MemberController extends \yii\web\Controller
         $model=new Address();
         $request=\Yii::$app->request;
         if($request->isPost){
+
             $model->load($request->post(),'');
             if($model->validate()){
                 //获取地址详情
-                $model->address=$model->cmbProvince.$model->cmbCity.$model->cmbArea.$model->address;
+                $model->province=$model->cmbProvince;
+                $model->city=$model->cmbCity;
+                $model->area=$model->cmbArea;
                //获取登录用户id
                 $model->member_id=\Yii::$app->user->id;
                 $model->save();
@@ -138,13 +144,16 @@ class MemberController extends \yii\web\Controller
         $request=\Yii::$app->request;
         $id=$request->get('id');
         $model=Address::findOne(['id'=>$id]);
-       // var_dump($model);die;
+
         //接收表单数据修改
         if($request->isPost){
            // var_dump($model,$request->post());die;
             $model->load($request->post(),'');
             if($model->validate()){
-                $model->address=$model->cmbProvince.$model->cmbCity.$model->cmbArea.$model->address;
+
+                $model->province=$model->cmbProvince;
+                $model->city=$model->cmbCity;
+                $model->area=$model->cmbArea;
                 $model->save();
                 return $this->redirect(['member/address']);
             }else{

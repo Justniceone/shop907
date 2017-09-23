@@ -99,4 +99,5 @@ class Goods extends \yii\db\ActiveRecord
     public function getGoodsCategory(){
         return $this->hasOne(GoodsCategory::className(),['id'=>'goods_category_id']);
     }
+
 }

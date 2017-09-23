@@ -33,7 +33,7 @@ class Address extends \yii\db\ActiveRecord
             [['address', 'username'], 'required'],
             [['member_id'], 'integer'],
             [['address'], 'string', 'max' => 255],
-            ['is_default','integer'],
+            ['is_default','string'],
             [['cmbProvince','cmbCity','cmbArea','tel'],'string'],
         ];
     }

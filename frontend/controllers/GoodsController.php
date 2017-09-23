@@ -107,14 +107,33 @@ class GoodsController extends \yii\web\Controller
 
     public function actionCartShow(){
 
-        //从cookie中获取购物车数据
-        $cookies=\Yii::$app->request->cookies;//实例化只读cookie
-        print_r(unserialize($cookies->get('cart')));
+        if(\Yii::$app->user->isGuest){
+            //没有登录从cookie中获取购物车数据
+            $cookies=\Yii::$app->request->cookies;//实例化只读cookie
+            print_r(unserialize($cookies->get('cart')));
 
-        //根据cookie信息查找对应的商品
-        $arrays=unserialize($cookies->getValue('cart')); //$arrays=[1=>2,3=>4,5=>6];
+            //根据cookie信息查找对应的商品
 
-        $goods=Goods::find()->where(['in','id',array_keys($arrays)])->all();
+            $arrays=unserialize($cookies->getValue('cart')); //$arrays=[1=>2,3=>4,5=>6];
+
+            if($arrays){
+                $goods=Goods::find()->where(['in','id',array_keys($arrays)])->all();
+            }else{
+                $goods=[];
+        }
+
+        }else{
+            //登录从数据库获取商品数据
+            $carts=Cart::find()->where(['member_id'=>\Yii::$app->user->id])->asArray()->all();
+
+            $arrays=[];
+            foreach ($carts as $cart){
+                $arrays[$cart['goods_id']]=$cart['amount'];
+            }
+
+            //$arrays=[1=>2,3=>4,5=>6]
+            $goods=Goods::find()->where(['in','id',array_keys($arrays)])->all();
+        }
 
         return $this->renderPartial('cart',['goods'=>$goods,'arrays'=>$arrays]);
     }
@@ -156,17 +175,33 @@ class GoodsController extends \yii\web\Controller
 
     }
 
-    public function actionSys(){
+    public static function actionSys(){
         //从cookie中获取购物车数据
         $cookies=\Yii::$app->request->cookies;//实例化只读cookie
-       // print_r(unserialize($cookies->get('cart')));
-        $arr=unserialize($cookies->get('cart'));
-        $ids=array_keys($arr);  //[11,21];
-        $if_be=Goods::find()->where(['in','member_id',$ids])->all();
-        if($if_be){
-
-        }else{
-            
+        $carts=$cookies->getValue('cart');
+        if($carts){
+            $carts=unserialize($carts); //[1=>2,3=>4]
+            foreach ($carts as $goods_id=>$amount){
+                $cart=Cart::findOne(['goods_id'=>$goods_id,'member_id'=>\Yii::$app->user->id]);
+                if($cart){
+                    //增加数量
+                    $cart->amount +=$amount;
+                    $cart->save();
+                }else{
+                    //添加商品
+                    $model=new Cart();
+                    $model->goods_id=$goods_id;
+                    $model->amount=$amount;
+                    $model->member_id=\Yii::$app->user->id;
+                    $model->save();
+                }
+            }
         }
+
+        //清除cookie中的购物车信息
+        $cookies=\Yii::$app->response->cookies;
+        $cookies->remove('cart');
+
     }
 }
+
