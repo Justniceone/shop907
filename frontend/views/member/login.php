@@ -3,11 +3,24 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>登录商城</title>
+    <link rel="stylesheet" href="/style/login.css" type="text/css">
+
+    <link rel="stylesheet" href="/style/login.css" type="text/css">
     <link rel="stylesheet" href="/style/base.css" type="text/css">
     <link rel="stylesheet" href="/style/global.css" type="text/css">
     <link rel="stylesheet" href="/style/header.css" type="text/css">
-    <link rel="stylesheet" href="/style/login.css" type="text/css">
+    <link rel="stylesheet" href="/style/list.css" type="text/css">
+    <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <link rel="stylesheet" href="/style/bottomnav.css" type="text/css">
     <link rel="stylesheet" href="/style/footer.css" type="text/css">
+    <link rel="stylesheet" href="/style/home.css" type="text/css">
+    <link rel="stylesheet" href="/style/order.css" type="text/css">
+    <link rel="stylesheet" href="/style/index.css" type="text/css">
+
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+
 </head>
 <body>
 
@@ -114,10 +127,6 @@
 </div>
 <!-- 底部版权 end -->
 
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
-
 <script type="text/javascript">
     //生成验证码
     var url="<?=\yii\helpers\Url::to(['site/captcha'])?>";
@@ -167,5 +176,6 @@
     });
 
 </script>
+
 </body>
 </html>

@@ -134,7 +134,6 @@ class MemberController extends \yii\web\Controller
         $seconds=GoodsCategory::find()->where(['depth'=>1])->all();
         $goods=Goods::find()->all();
         $third=GoodsCategory::find()->where(['depth'=>2])->all();
-
         return $this->renderPartial('index',['goods'=>$goods,'categorys'=>$categorys,'seconds'=>$seconds,'third'=>$third]);
 
     }
@@ -169,8 +168,6 @@ class MemberController extends \yii\web\Controller
         Address::findOne(['id'=>$id])->delete();
         return $this->redirect(['member/address']);
     }
-
-
 
     public function actionSms(){
         //发送短信功能

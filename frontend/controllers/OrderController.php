@@ -106,9 +106,8 @@ class OrderController extends \yii\web\Controller
         $orders=Order::find()->where(['member_id'=>\Yii::$app->user->id])->all();
         $order_ids=Order::find()->select(['id'])->where(['member_id'=>\Yii::$app->user->id])->asArray()->column();
        // print_r($order_ids);die;
-        //根据订单号查询订单详细信息
-        $order_goods=OrderGoods::find()->select(['logo','price'])->where(['in','order_id',$order_ids])->all();
-        return $this->renderPartial('order-list',['orders'=>$orders,'order_goods'=>$order_goods]);
+
+        return $this->renderPartial('order-list',['orders'=>$orders]);
     }
 
     public function actionDelete($id){

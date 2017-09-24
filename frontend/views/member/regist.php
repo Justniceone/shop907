@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="/style/global.css" type="text/css">
     <link rel="stylesheet" href="/style/header.css" type="text/css">
     <link rel="stylesheet" href="/style/login.css" type="text/css">
+
     <link rel="stylesheet" href="/style/footer.css" type="text/css">
 </head>
 <body>
 
 <!--顶部导航开始-->
-<?php require 'nav.php'?>
+<?php require '../views/common/nav.php'?>
 <!--顶部导航结束-->
 
 <div style="clear:both;"></div>
@@ -245,6 +246,6 @@
 
     var url="<?=\yii\helpers\Url::to(['member/message'])?>";
 
-
 </script>
+
 </html>

@@ -44,7 +44,6 @@ class GoodsController extends \yii\web\Controller
     }
 
 
-
     public function actionDetail($id){
         //商品详情
 
@@ -68,7 +67,6 @@ class GoodsController extends \yii\web\Controller
             }else{
                 $data=[];
             }
-
             //检测购物车中是否存在已经添加过的商品
             if(array_key_exists($id,$data)){
                 //存在就增加数量
@@ -76,12 +74,10 @@ class GoodsController extends \yii\web\Controller
             }else{
                 $data[$id]=$amount;
             }
-
             //添加数据到cookie中
             $cookies=\Yii::$app->response->cookies;
             $cookie=new Cookie();//实例化cookie对象,添加属性
             $cookie->name='cart';//设置cookie键名
-
             $data[$id]=$amount; //将数据保存成[id=>num,id2=>num2]的格式然后序列化保存
             $cookie->value=serialize($data);
             $cookies->add($cookie);
@@ -93,13 +89,8 @@ class GoodsController extends \yii\web\Controller
             $cart->goods_id=$id;
             $cart->amount=$amount;
             $cart->member_id=$member_id;
-            //同步cookie中的数据到数据库
-            $cookies=\Yii::$app->request->cookies;
-            $goods=unserialize($cookies->getValue('cart'));//[1=>1,2=>2,3=>3];
-
             $cart->save();
         }
-
 
         //跳转到购物车结算页面
         return $this->redirect(['goods/cart-show']);
@@ -125,12 +116,10 @@ class GoodsController extends \yii\web\Controller
         }else{
             //登录从数据库获取商品数据
             $carts=Cart::find()->where(['member_id'=>\Yii::$app->user->id])->asArray()->all();
-
             $arrays=[];
             foreach ($carts as $cart){
                 $arrays[$cart['goods_id']]=$cart['amount'];
             }
-
             //$arrays=[1=>2,3=>4,5=>6]
             $goods=Goods::find()->where(['in','id',array_keys($arrays)])->all();
         }
@@ -159,7 +148,6 @@ class GoodsController extends \yii\web\Controller
             $cookies=\Yii::$app->response->cookies;
             $cookie=new Cookie();//实例化cookie对象,添加属性
             $cookie->name='cart';//设置cookie键名
-
             //将数据保存成[id=>num,id2=>num2]的格式然后序列化保存
             $cookie->value=serialize($data);
             $cookies->add($cookie);
@@ -178,9 +166,9 @@ class GoodsController extends \yii\web\Controller
     public static function actionSys(){
         //从cookie中获取购物车数据
         $cookies=\Yii::$app->request->cookies;//实例化只读cookie
-        $carts=$cookies->getValue('cart');
+        $carts=$cookies->getValue('cart');//获取值 序列化后的字符串
         if($carts){
-            $carts=unserialize($carts); //[1=>2,3=>4]
+            $carts=unserialize($carts); //[1=>2,3=>4] 反序列化后的格式
             foreach ($carts as $goods_id=>$amount){
                 $cart=Cart::findOne(['goods_id'=>$goods_id,'member_id'=>\Yii::$app->user->id]);
                 if($cart){
