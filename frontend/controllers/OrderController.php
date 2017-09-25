@@ -21,6 +21,10 @@ class OrderController extends \yii\web\Controller
         $models=Address::find()->where(['member_id'=>\Yii::$app->user->id])->all();
         //获取购物车商品
         $carts=Cart::find()->where(['member_id'=>\Yii::$app->user->id])->all();
+        if(empty($carts)){
+            return $this->redirect(['goods/index']);
+        }
+        //没有商品返回选购
         return $this->renderPartial('check-order',['models'=>$models,'carts'=>$carts]);
     }
 
@@ -104,7 +108,7 @@ class OrderController extends \yii\web\Controller
 
         //根据用户id展示该用户的所有订单
         $orders=Order::find()->where(['member_id'=>\Yii::$app->user->id])->all();
-        $order_ids=Order::find()->select(['id'])->where(['member_id'=>\Yii::$app->user->id])->asArray()->column();
+        //$order_ids=Order::find()->select(['id'])->where(['member_id'=>\Yii::$app->user->id])->asArray()->column();
        // print_r($order_ids);die;
 
         return $this->renderPartial('order-list',['orders'=>$orders]);
@@ -112,9 +116,9 @@ class OrderController extends \yii\web\Controller
 
     public function actionDelete($id){
         //根据id删除订单
-       // Order::findOne(['id'=>$id])->delete();
+        Order::findOne(['id'=>$id])->delete();
         //删除订单详情中的商品数据
-       // OrderGoods::deleteAll(['order_id'=>$id]);
+        OrderGoods::deleteAll(['order_id'=>$id]);
         return json_encode(['success'=>true,'msg'=>'删除成功']);
     }
 }

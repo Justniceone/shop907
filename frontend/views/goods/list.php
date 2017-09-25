@@ -7,7 +7,7 @@
 </head>
 <body>
 <!-- 顶部导航 start -->
-
+<?php require '../views/common/nav.php'?>
 <!-- 顶部导航 end -->
 <link rel="" href="">
 
@@ -112,26 +112,7 @@
             </div>
 
             <div class="cat_bd none">
-
-                <div class="cat item1">
-                    <h3><a href="">图像、音像、数字商品</a> <b></b></h3>
-                    <div class="cat_detail none">
-                        <dl class="dl_1st">
-                            <dt><a href="">电子书</a></dt>
-                            <dd>
-                                <a href="">免费</a>
-                                <a href="">小说</a>
-                                <a href="">励志与成功</a>
-                                <a href="">婚恋/两性</a>
-                                <a href="">文学</a>
-                                <a href="">经管</a>
-                                <a href="">畅读VIP</a>
-                            </dd>
-                        </dl>
-
-                    </div>
-                </div>
-
+                <?= \backend\models\GoodsCategory::GoodsCategory();?>
             </div>
 
         </div>

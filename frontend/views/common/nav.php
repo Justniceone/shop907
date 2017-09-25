@@ -22,7 +22,7 @@
                     </li>
                     <li class="line">|</li>
                     <li>
-                        <a href="<?=\yii\helpers\Url::to(['member/order-list'])?>">我的订单</a>
+                        <a href="<?=\yii\helpers\Url::to(['order/order-list'])?>">我的订单</a>
                     </li>
                     <li class="line">|</li>
                     <li>客户服务</li>
@@ -32,7 +32,3 @@
         </div>
     </div>
     <!-- 顶部导航 end -->
-<?php
-/**
- * @var $this \yii\web\View
- */

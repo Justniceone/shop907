@@ -23,7 +23,7 @@
 <!-- 页面头部 start -->
 <div class="header w990 bc mt15">
     <div class="logo w990">
-        <h2 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h2>
+        <h2 class="fl"><a href="<?=\yii\helpers\Url::to(['member/login'])?>"><img src="/images/logo.png" alt="京西商城"></a></h2>
         <div class="flow fr">
             <ul>
                 <li class="cur">1.我的购物车</li>
@@ -71,7 +71,7 @@
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="6">购物金额总计： <strong>￥ <span id="total"></span></strong></td>
+            <td colspan="6">购物金额总计： <strong>￥<span id="total"></span></strong></td>
         </tr>
         </tfoot>
     </table>
@@ -115,7 +115,10 @@
             //移除tr
             $(this).closest('tr').fadeOut('slow');
         }
-    })
+    });
+
+    var price=$('.col5').find('span').text();
+
 </script>
 </body>
 </html>

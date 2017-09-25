@@ -101,7 +101,7 @@ class GoodsController extends \yii\web\Controller
         if(\Yii::$app->user->isGuest){
             //没有登录从cookie中获取购物车数据
             $cookies=\Yii::$app->request->cookies;//实例化只读cookie
-            print_r(unserialize($cookies->get('cart')));
+           // print_r(unserialize($cookies->get('cart')));
 
             //根据cookie信息查找对应的商品
 

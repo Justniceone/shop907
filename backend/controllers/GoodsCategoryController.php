@@ -43,6 +43,7 @@ class GoodsCategoryController extends \yii\web\Controller
                 return $this->redirect(['index']);
             }
         }
+
         return $this->render('add',['model'=>$model,'topCategory'=>json_encode($topCategory)]);
     }
 
@@ -54,7 +55,6 @@ class GoodsCategoryController extends \yii\web\Controller
         //合并到gts数组
         $topCategory=ArrayHelper::merge([$top],$gts);
         $model=GoodsCategory::findOne(['id'=>$request->get('id')]);
-
         if($request->isPost){
             $model->load($request->post());
             if($model->validate()){

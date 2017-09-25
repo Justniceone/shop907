@@ -11,7 +11,6 @@ use frontend\models\SmsDemo;
 class MemberController extends \yii\web\Controller
 {
     public $enableCsrfValidation=false;
-
     public function actionRegist(){
 
         //用户注册功能
@@ -128,7 +127,7 @@ class MemberController extends \yii\web\Controller
 
     public function actionIndex(){
         //商城首页
-        // var_dump(\Yii::$app->user->identity);
+
         //获取所有商品数据,以及商品分类数据
         $categorys=GoodsCategory::find()->where(['depth'=>0])->all();
         $seconds=GoodsCategory::find()->where(['depth'=>1])->all();
@@ -210,4 +209,25 @@ class MemberController extends \yii\web\Controller
         }
         return 'true';
     }
+
+    //发送邮件
+    public function actionSendEmails(){
+        $result=\Yii::$app->mailer->compose()
+             ->setFrom('18782993275@163.com')
+             ->setTo('770851657@qq.com')
+             ->setSubject('波波土鸡王')
+             ->setHtmlBody('<p>波波土鸡,鸡中一霸.</p>>')
+             ->send();
+        var_dump($result);
+    }
+
+    public function actionRedis(){
+        //Redis测试
+        $redis=new \Redis();
+        $redis->connect('127.0.0.1');
+        $id=rand(1,10);
+        $redis->set('name_'.$id,'xp_'.$id);
+        var_dump($redis->get('name_'.$id));
+    }
+
 }
