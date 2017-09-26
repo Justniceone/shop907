@@ -68,7 +68,7 @@ class Menu extends \yii\db\ActiveRecord
            $second=Menu::find()->where(['parent_id'=>$menu->id])->all();
            $items=[];
            foreach ($second as $value){
-               //判断用户是否有看到菜单的权限
+               //判断用户是否有看到二级菜单的权限
                if(Yii::$app->user->can($value->url)){
                    $items[]=['label'=>$value->name,'url'=>[$value->url]];
                }
@@ -79,7 +79,9 @@ class Menu extends \yii\db\ActiveRecord
                 ['label' => '主页','url'=>'site/index'],
             ];*/
 
-            $menuItems[]=['label' => $menu->name,'items'=>$items];
+
+                $menuItems[]=['label' => $menu->name,'items'=>$items];
+
         }
         return $menuItems;
 /*        $menuItems=  [
