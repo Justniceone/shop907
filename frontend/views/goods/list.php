@@ -349,27 +349,22 @@
         <!-- 商品列表 start-->
         <div class="goodslist mt10">
             <ul>
-
                 <?php foreach ($lists as $list):?>
                 <li>
                     <dl>
                         <dt><a href="<?=\yii\helpers\Url::to(['goods/detail?id='.$list->id])?>"><img src="http://admin.yiishop.com/<?=$list->logo?>"></a></dt>
-                        <dd><a href="<?=\yii\helpers\Url::to(['goods/detail?id='.$list->id])?>"><?=$list->name?></a></dt>
-                        <dd><strong>￥<?=$list->shop_price?></strong></dt>
-                        <dd><a href="<?=\yii\helpers\Url::to(['goods/detail?id='.$list->id])?>"><em>已有<?=$list->view_times?>浏览</em></a></dt>
+                        <dd><a href="<?=\yii\helpers\Url::to(['goods/detail?id='.$list->id])?>"><?=$list->name?></a></dd>
+                        <dd><strong>￥<?=$list->shop_price?></strong></dd>
+                        <dd><a href="<?=\yii\helpers\Url::to(['goods/detail?id='.$list->id])?>"><em>已有<?=$list->view_times?>浏览</em></a></dd>
                     </dl>
                 </li>
-
                 <?php endforeach;?>
-
             </ul>
         </div>
         <!-- 商品列表 end-->
 
         <!-- 分页信息 start -->
-       <?php \yii\widgets\LinkPager::widget([
-               'pagination'=>$pager,
-       ])?>
+
 
 
         <!-- 分页信息 end -->

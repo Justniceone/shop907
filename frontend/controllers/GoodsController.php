@@ -6,6 +6,7 @@ use backend\models\Goods;
 use backend\models\GoodsCategory;
 use backend\models\GoodsGallery;
 use frontend\models\Cart;
+use frontend\models\SphinxClient;
 use yii\data\Pagination;
 use yii\web\Cookie;
 
@@ -14,9 +15,9 @@ class GoodsController extends \yii\web\Controller
     public function actionIndex()
     {
         //获取所有顶级分类数据
-        $tops=GoodsCategory::find()->where(['parent_id'=>0])->all();
-
-        return $this->renderPartial('index',['tops'=>$tops]);
+        //$tops=GoodsCategory::find()->where(['parent_id'=>0])->all();
+        file_put_contents(\Yii::getAlias('@frontend/views/common/index.html'),$this->renderPartial('index'));
+        return $this->renderPartial('index');
     }
 
     public function actionList($cate_id){
@@ -55,18 +56,19 @@ class GoodsController extends \yii\web\Controller
         return $this->renderPartial('detail',['good'=>$good,'gallery'=>$gallery]);
     }
 
-    public function actionCart($amount,$id){
-
+    public function actionCart($id,$amount){
+        //购物车功能
         if(\Yii::$app->user->isGuest){
             $cookies=\Yii::$app->request->cookies;
-            //必须使用requestcookie获取
-            //判断是否有值
-            if($cookies->getValue('cart')){
+            //必须使用request cookie获取
+            $value=$cookies->getValue('cart');
+            if($value){
                 //存在值直接序列化
-                $data=unserialize($cookies->getValue('cart'));
+                $data=unserialize($value); //[1=>2,3=>4,...]
             }else{
                 $data=[];
             }
+            //print_r($data);
             //检测购物车中是否存在已经添加过的商品
             if(array_key_exists($id,$data)){
                 //存在就增加数量
@@ -74,11 +76,13 @@ class GoodsController extends \yii\web\Controller
             }else{
                 $data[$id]=$amount;
             }
+
+            //print_r($data);die;
+
             //添加数据到cookie中
             $cookies=\Yii::$app->response->cookies;
             $cookie=new Cookie();//实例化cookie对象,添加属性
             $cookie->name='cart';//设置cookie键名
-            $data[$id]=$amount; //将数据保存成[id=>num,id2=>num2]的格式然后序列化保存
             $cookie->value=serialize($data);
             $cookies->add($cookie);
 
@@ -101,12 +105,8 @@ class GoodsController extends \yii\web\Controller
         if(\Yii::$app->user->isGuest){
             //没有登录从cookie中获取购物车数据
             $cookies=\Yii::$app->request->cookies;//实例化只读cookie
-           // print_r(unserialize($cookies->get('cart')));
-
             //根据cookie信息查找对应的商品
-
             $arrays=unserialize($cookies->getValue('cart')); //$arrays=[1=>2,3=>4,5=>6];
-
             if($arrays){
                 $goods=Goods::find()->where(['in','id',array_keys($arrays)])->all();
             }else{
@@ -189,6 +189,35 @@ class GoodsController extends \yii\web\Controller
         //清除cookie中的购物车信息
         $cookies=\Yii::$app->response->cookies;
         $cookies->remove('cart');
+
+    }
+    
+    //测试搜索功能
+    public function actionSearch($keywords)
+    {
+
+            $cl = new SphinxClient();
+            $cl->SetServer ( '127.0.0.1', 9312);
+            $cl->SetConnectTimeout ( 10 );
+            $cl->SetArrayResult ( true );
+            // $cl->SetMatchMode ( SPH_MATCH_ANY);
+            $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);
+            $cl->SetLimits(0, 1000);
+            //$info = '波';
+            $res = $cl->Query($keywords, 'goods');//shopstore_search
+
+
+            //print_r($res);
+            $ids=[];
+            if(isset($res['matches'])){
+                foreach ($res['matches'] as $id){
+                    $ids[]=$id['id'];
+                }
+            }
+
+            $lists=Goods::find()->where(['in','id',$ids])->all();
+
+            return $this->renderPartial('list',['lists'=>$lists]);
 
     }
 }

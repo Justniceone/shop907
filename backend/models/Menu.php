@@ -79,10 +79,11 @@ class Menu extends \yii\db\ActiveRecord
                 ['label' => '主页','url'=>'site/index'],
             ];*/
 
-
-                $menuItems[]=['label' => $menu->name,'items'=>$items];
-
+                if($items){
+                    $menuItems[]=['label' => $menu->name,'items'=>$items];
+                }
         }
+
         return $menuItems;
 /*        $menuItems=  [
             ['label' => '管理','items'=>[

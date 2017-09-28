@@ -18,10 +18,6 @@ class GoodsController extends \yii\web\Controller
     public function actionIndex()
     {
         $where= \Yii::$app->request->get();
-       // print_r($where);die;
-
-        //$conditions=implode(',',$where);
-        //echo $name;die;
         $name=isset($where['name'])?$where['name']:'';
         $sn=isset($where['sn'])?$where['sn']:'';
         $sprice=isset($where['sprice'])?$where['sprice']:'';
@@ -31,7 +27,6 @@ class GoodsController extends \yii\web\Controller
             'totalCount'=> $models=Goods::find()->Where(['status'=>1])->andFilterWhere(['like','name',$name])->andFilterWhere(['like','sn',$sn])->andFilterWhere(['between','shop_price',$sprice,$tprice])->count(),
             'pageSize'=>4,
         ]);
-
 
         $models=Goods::find()->Where(['status'=>1])->andFilterWhere(['like','name',$name])->andFilterWhere(['like','sn',$sn])->andFilterWhere(['between','shop_price',$sprice,$tprice])->orderBy('sort desc')->offset($pager->offset)->limit($pager->limit)->all();
         return $this->render('index',['pager'=>$pager,'models'=>$models]);
@@ -60,11 +55,9 @@ class GoodsController extends \yii\web\Controller
 
             //验证数据
             if($model->validate() && $intro->validate()){
-               // print_r($intro->content);die;
                 //根据日期生成sn号,查询当日数量表
                 $date=date('Ymd');
                 $count=GoodsDayCount::findOne(['day'=>$date]);
-               // print_r($count);die;
                 if($count){
                     if($count->count <9){
                         //sn=date+000+($count->count+1)
@@ -126,14 +119,14 @@ class GoodsController extends \yii\web\Controller
         if(\Yii::$app->request->isPost){
             $intro->load(\Yii::$app->request->post());
             $model->load(\Yii::$app->request->post());
-            // print_r($model);die;
+
             //验证数据
             if($model->validate() && $intro->validate()){
                 $intro->save(false);
                 $model->save(false);
 
                 //保存图片到相册
-                $GoodsGallery=new GoodsGallery();
+                $GoodsGallery=GoodsGallery::findOne(['goods_id'=>$id]);
                 $GoodsGallery->goods_id=$model->id;
                 $GoodsGallery->path=$model->logo;
                 $GoodsGallery->save(false);
@@ -161,7 +154,6 @@ class GoodsController extends \yii\web\Controller
         $id=$request->get('id');
         //查看相册
         $model=GoodsGallery::find()->where(['goods_id'=>$id])->asArray()->all();
-       //接收goods_id保存
 
         $path=$request->get('fileUrl');
         if($path){
@@ -266,7 +258,7 @@ class GoodsController extends \yii\web\Controller
         return [
             'rbac'=>[
                 'class'=>RbacFilter::className(),
-                'except'=>['login','logout','captcha','error','change','s-upload','check'],
+                'except'=>['login','logout','captcha','error','change','s-upload','check','ajax'],
             ]
         ];
     }

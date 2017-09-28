@@ -177,14 +177,14 @@ class MemberController extends \yii\web\Controller
         \Yii::$app->session->set('message_'.$cellphone,$code);
 
         $demo = new SmsDemo(
-            "LTAIaGKxVSdRcAH6",
-            "vOcZwQ76qPPLaXHvo0zD9RdHImpu6z"
+            "LTAIcHm8QWFTvxV4",//LTAIaGKxVSdRcAH6
+            "8tQRuGwpaN2DcAGLDQiHokV8tB5L1q" //vOcZwQ76qPPLaXHvo0zD9RdHImpu6z
         );
 
         echo "SmsDemo::sendSms\n";
         $response = $demo->sendSms(
-            "波胖商城欢迎你", // 短信签名
-            "SMS_97960025", // 短信模板编号
+            "剑门土鸡王", // 短信签名//波胖商城欢迎你
+            "SMS_100055015", // 短信模板编号//SMS_97960025
             "$cellphone", // 短信接收者
             Array(  // 短信模板中字段的值
                 "code"=>$code
