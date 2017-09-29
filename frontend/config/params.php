@@ -43,7 +43,7 @@ return [
          * 微信支付
          */
         'payment' => [
-            'merchant_id'        => '1228531002',
+            'merchant_id'        => '1228531002',//商户id
             'key'                => 'a687728a72a825812d34f307b630097b',
             'cert_path'          => 'path/to/your/cert.pem', // XXX: 绝对路径！！！！
             'key_path'           => 'path/to/your/key',      // XXX: 绝对路径！！！！
