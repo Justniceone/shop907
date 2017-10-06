@@ -8,7 +8,10 @@ use backend\models\GoodsCategory;
 use frontend\models\Address;
 use frontend\models\Login;
 use frontend\models\Member;
+use frontend\models\Order;
 use yii\web\Controller;
+use yii\web\Cookie;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class ApiController extends Controller{
@@ -362,6 +365,106 @@ class ApiController extends Controller{
         //添加商品到购物车
         $request=\Yii::$app->request;
         //接收商品id和数量
+        $id=$request->post('id');
+        $num=$request->post('num');
+        $cookies=\Yii::$app->request->cookies;
+        //判断是否有商品
+        $carts=$cookies->getValue('cart');
+        if($carts){
+            $carts=unserialize($carts);
+        }else{
+            $carts=[];
+        }
+        //检测购物车中是否有已经添加过的商品
+        if(array_key_exists($id,$carts)){
+            $carts[$id]+=$num;
+        }else{
+            $carts[$id]=$num;
+        }
+        //将商品存入cookie中
+        $cookies=\Yii::$app->response->cookies;
+        $cookie=new Cookie();
+        $cookie->name='cart';//设置cookie键名
+        $cookie->value=serialize($carts);
+        $cookies->add($cookie);
+    }
 
+    public function actionEdit(){
+        //修改购物车商品数量
+        $cookies=\Yii::$app->request->cookies;
+        $request=\Yii::$app->request;
+        $id=$request->post('id');
+        $num=$request->post('num');
+        if($cookies->getValue('cart')){
+            //存在值直接序列化
+            $data=unserialize($cookies->getValue('cart'));
+        }else{
+            $data=[];
+        }
+
+        //修改为当前数量
+        $data[$id] =$num;
+        //添加数据到cookie中
+        $cookies=\Yii::$app->response->cookies;
+        $cookie=new Cookie();//实例化cookie对象,添加属性
+        $cookie->name='cart';//设置cookie键名
+        //将数据保存成[id=>num,id2=>num2]的格式然后序列化保存
+        $cookie->value=serialize($data);
+        $cookies->add($cookie);
+
+    }
+
+    public function actionDelete(){
+        //清空购物车
+        $cookies=\Yii::$app->response->cookies;
+        $cookies->remove('cart');
+    }
+
+    public function actionLists(){
+        //获取购物车所有商品
+        $cookies=\Yii::$app->request->cookies;//实例化只读cookie
+        //根据cookie信息查找对应的商品
+        $arrays=unserialize($cookies->getValue('cart')); //$arrays=[1=>2,3=>4,5=>6];
+        if($arrays){
+            $carts=Goods::find()->where(['in','id',array_keys($arrays)])->all();
+        }else{
+            $carts=[];
+        }
+        return $carts;
+    }
+
+    public function actionPays(){
+        //获取支付方式
+        $pays=Order::$payment;
+        return $pays;
+    }
+
+    public function actionDelivery(){
+        //获取送货方式
+        $delivery=Order::$delivery;
+        return $delivery;
+    }
+
+    public function actionSubmit(){
+        //提交订单
+
+    }
+
+    public function actionOrder(){
+        //获取当前用户订单列表
+        $orders=Order::find()->where(['id'=>\Yii::$app->user->id])->all();
+        return $orders;
+    }
+
+    public function actionCancel(){
+        //取消订单
+        //接收订单id
+        $id=\Yii::$app->request->post('id');
+        $order=Order::findOne(['id'=>$id]);
+        if($order){
+            $order->delete();
+        }else{
+            throw new NotFoundHttpException('没有该订单');
+        }
     }
 }
