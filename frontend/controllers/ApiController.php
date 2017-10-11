@@ -6,11 +6,15 @@ use backend\models\Brand;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
 use frontend\models\Address;
+use frontend\models\Cart;
 use frontend\models\Login;
 use frontend\models\Member;
 use frontend\models\Order;
+use frontend\models\OrderGoods;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\Cookie;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -299,7 +303,7 @@ class ApiController extends Controller{
     public function actionBrandGoods(){
         $info=[
             'error'=>false,
-            'msg'=>'文章分类:',
+            'msg'=>'品牌分类:',
             'data'=>[],
         ];
         //获取某品牌下所有商品
@@ -387,6 +391,8 @@ class ApiController extends Controller{
         $cookie->name='cart';//设置cookie键名
         $cookie->value=serialize($carts);
         $cookies->add($cookie);
+        return ['msg'=>'添加成功','error'=>false];
+
     }
 
     public function actionEdit(){
@@ -412,6 +418,7 @@ class ApiController extends Controller{
         $cookie->value=serialize($data);
         $cookies->add($cookie);
 
+        return ['error'=>false,'msg'=>'修改成功'];
     }
 
     public function actionDelete(){
@@ -447,7 +454,82 @@ class ApiController extends Controller{
 
     public function actionSubmit(){
         //提交订单
+        //判断是否登录
+        if(\Yii::$app->user->isGuest){
+            throw new ForbiddenHttpException('请登录');
+        }
+        $request=\Yii::$app->request;
+        $order=new Order();
+        if($request->isPost){
+            $order->load($request->post(),'');
+            //根据地址表id查询出详细的地址信息
 
+            $address=Address::findOne(['id'=>$request->post('address_id')]);
+            $order->member_id=\Yii::$app->user->id;
+            $order->name=$address->username;
+            $order->provice=$address->province;
+            $order->city=$address->city;
+            $order->area=$address->area;
+            $order->address=$address->address;
+            $order->tel=$address->tel;
+            // $order->delivery_id=$request->post('delivery');
+            $order->delivery_name=Order::$delivery[$order->delivery_id]['name'];
+            $order->delivery_price=Order::$delivery[$order->delivery_id]['charge'];
+            $order->payment_id=$request->post('pay');
+            $order->payment_name=Order::$payment[$order->payment_id]['name'];
+            $order->total=0;
+            $order->status=2;//0已取消1待付款2待发货3待收货4完成）
+            $order->trade_no=rand(100000,999999);//订单号随机数字
+            $order->create_time=time();
+            //操作数据库之前开启事务,确认库存情况
+            $transaction=\Yii::$app->db->beginTransaction();
+            try{
+
+                if(!$order->save()){
+                    var_dump($order->getErrors());
+                }
+
+                //根据购物车商品数量检测商品库存,保证每种商品库存足够
+                $carts=Cart::find()->where(['member_id'=>\Yii::$app->user->id])->all();
+                //遍历确认数量
+                foreach ($carts as $cart){
+                    $good=Goods::findOne(['id'=>$cart->goods_id]);
+
+                    if($good->stock < ($cart->amount)){
+                        throw new Exception($good->name.'库存不足,停止下单');
+                    }
+                    $good->stock-=$cart->amount;
+                    $good->save();
+                    //新的订单商品详情表
+                    $order_goods=new OrderGoods();
+                    $order_goods->order_id=$order->id;
+                    $order_goods->goods_id=$cart->goods_id;
+                    $order_goods->goods_name=$good->name;
+                    $order_goods->logo=$good->logo;
+                    $order_goods->price=$good->shop_price;
+                    $order_goods->amount=$cart->amount;
+                    $order_goods->total=$cart->amount * $good->shop_price;
+                    $order_goods->save();
+                    //计算订单总金额
+                    $order->total+=$order_goods->total;
+                }
+
+                //加上运费
+                $order->total+=$order->delivery_price;
+                $order->save();
+                //订单完成,清空购物车
+                Cart::deleteAll(['member_id'=>\Yii::$app->user->id]);
+
+                //提交事务
+                $transaction->commit();
+
+                return ['error'=>false,'msg'=>'生成订单成功'];
+            }catch (Exception $exception){
+                //库存不够,不能下单,回滚数据
+                $transaction->rollBack();
+                return ['error'=>true,'msg'=>'下单失败'];
+            }
+        }
     }
 
     public function actionOrder(){

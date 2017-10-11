@@ -128,6 +128,7 @@
 <!-- 底部版权 end -->
 
 <script type="text/javascript">
+
     //生成验证码
     var url="<?=\yii\helpers\Url::to(['site/captcha'])?>";
     $.getJSON(url,{'refresh':1},function (data) {

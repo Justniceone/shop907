@@ -150,19 +150,17 @@
     }
 
     //生成验证码
-    var url="<?=\yii\helpers\Url::to(['site/captcha'])?>";
-    $.getJSON(url,{'refresh':1},function (data) {
-        //console.log(data);
-        $('.captcha_img').attr('src',data.url);
-    });
-
-    //点击更换验证码
-    $('.change_captcha').click(function () {
-        $.getJSON(url,{'refresh':1},function (data) {
+    var urlto="<?=\yii\helpers\Url::to(['site/captcha'])?>";
+    var change=function () {
+        $.getJSON(urlto,{'refresh':1},function (data) {
             //console.log(data);
             $('.captcha_img').attr('src',data.url);
         });
-    })
+    };
+    change();
+    //点击更换验证码
+    $('.change_captcha').click(change)
+
 
 </script>
 </body>

@@ -59,7 +59,6 @@
         <!-- 配送方式 start -->
         <div class="delivery">
             <h3>送货方式 </h3>
-
             <div class="delivery_select">
                 <table>
                     <thead>
